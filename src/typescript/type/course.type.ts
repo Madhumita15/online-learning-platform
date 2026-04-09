@@ -19,6 +19,24 @@ export type CourseListResponseType = {
   total: number;
 };
 
+export type getSingleCourseType = {
+   $id: string;
+    title: string;
+    description: string;
+    categoryId: string;
+    instructorId: string;
+    price: number;
+    image?: string;
+    rating: number;
+    status: string;
+    language?: string;
+    duration?: number;
+    instructorName: string
+    categoryName: string | null
+    approveStatus: string
+
+}
+
 export type CreateCourseResponse = {
     $id: string,
      title: string;

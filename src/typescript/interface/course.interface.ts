@@ -24,7 +24,8 @@ export interface CourseInitialState {
   page: number;
   totals: number;
   isEdit: string | null;
-  open: boolean
+  open: boolean,
+  singleIdCourse: CourseType | null
 
 }
 

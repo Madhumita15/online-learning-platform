@@ -10,6 +10,7 @@ import type {
   CourseListResponseType,
   CreateCourseResponse,
   deleteCourseResponse,
+  getSingleCourseType,
   updateCourseInput,
   updateCourseResponseType,
 } from "../../typescript/type/course.type";
@@ -23,27 +24,26 @@ const initialState: CourseInitialState = {
   totals: 0,
   isEdit: null,
   open: false,
+  singleIdCourse: null,
 };
-
-
 
 export const getAllCourse = createAsyncThunk<
   CourseListResponseType,
-  { page?: number; limit?: number, all?: boolean },
+  { page?: number; limit?: number; all?: boolean },
   { rejectValue: ErrorResponse }
 >("course/get", async ({ page, limit, all }, { rejectWithValue }) => {
   try {
-    const queries = []
+    const queries = [];
     if (all) {
-      queries.push(Query.limit(100)); 
+      queries.push(Query.limit(100));
     } else {
-      queries.push(Query.limit(limit || 5))
+      queries.push(Query.limit(limit || 5));
       queries.push(Query.offset(((page || 1) - 1) * (limit || 5)));
     }
     const response = await tablesDB.listRows({
       databaseId: import.meta.env.VITE_APPWRITE_PROJECT_DATABASE_ID,
       tableId: "courses",
-      queries
+      queries,
     });
 
     const mappedCourses = response.rows.map((row) => ({
@@ -76,24 +76,23 @@ export const getAllCourse = createAsyncThunk<
 
 export const getMyCourse = createAsyncThunk<
   CourseListResponseType,
-  { page?: number | undefined; limit?: number | undefined, all?: boolean },
+  { page?: number | undefined; limit?: number | undefined; all?: boolean },
   { rejectValue: ErrorResponse }
 >("mycourse/get", async ({ page, limit, all }, { rejectWithValue }) => {
   try {
-     const user = await account.get();
-     const queries = [Query.equal("instructorId", user.$id)];
+    const user = await account.get();
+    const queries = [Query.equal("instructorId", user.$id)];
     if (all) {
       queries.push(Query.limit(100));
-      
     } else {
       queries.push(Query.limit(limit || 5));
-      queries.push(Query.offset(((page || 0 )- 1) * (limit || 5)));
+      queries.push(Query.offset(((page || 0) - 1) * (limit || 5)));
     }
-   
+
     const response = await tablesDB.listRows({
       databaseId: import.meta.env.VITE_APPWRITE_PROJECT_DATABASE_ID,
       tableId: "courses",
-      queries: queries
+      queries: queries,
     });
 
     const mappedMyCourses = response.rows.map((row) => ({
@@ -124,6 +123,45 @@ export const getMyCourse = createAsyncThunk<
   }
 });
 
+export const getSingleCourse = createAsyncThunk<
+getSingleCourseType,
+{rowId: string },
+{rejectValue: ErrorResponse}
+>(
+  "course/getSingle",
+  async ({rowId}, { rejectWithValue }) => {
+    try {
+      const response = await tablesDB.getRow({
+        databaseId: import.meta.env.VITE_APPWRITE_PROJECT_DATABASE_ID,
+        tableId: "courses",
+        rowId: rowId,
+      });
+
+      return {
+        $id: response.$id,
+        title: response.title,
+        description: response.description,
+        categoryId: response.categoryId,
+        instructorId: response.instructorId,
+        instructorName: response.instructorName,
+        price: Number(response.price),
+        image: response.image,
+        rating: Number(response.rating),
+        status: response.status,
+        language: response.language,
+        duration: Number(response.duration),
+        categoryName: response.categoryName,
+        approveStatus: response.approveStatus,
+      };
+    } catch {
+      return rejectWithValue({
+        success: false,
+        message: "Failed to fetch course",
+      });
+    }
+  },
+);
+
 export const createCourse = createAsyncThunk<
   CreateCourseResponse,
   {
@@ -132,11 +170,10 @@ export const createCourse = createAsyncThunk<
   },
   { rejectValue: ErrorResponse }
 >("course/add", async ({ data, role }, { rejectWithValue }) => {
- 
   try {
-     const user = await account.get();
-    console.log("account user",user)
-    
+    const user = await account.get();
+    console.log("account user", user);
+
     let imageurl;
     if (data.image) {
       const file = await storage.createFile({
@@ -265,20 +302,24 @@ export const deleteCourse = createAsyncThunk<
 });
 
 export const updateStatus = createAsyncThunk<
-UpdateStatusResponse,
-{id: string, status: string | undefined, approveStatus?: string | undefined},
-{rejectValue: ErrorResponse}
+  UpdateStatusResponse,
+  {
+    id: string;
+    status: string | undefined;
+    approveStatus?: string | undefined;
+  },
+  { rejectValue: ErrorResponse }
 >(
   "cource/status",
-  async ({ id, status, approveStatus}, { rejectWithValue }) => {
+  async ({ id, status, approveStatus }, { rejectWithValue }) => {
     try {
       const response = await tablesDB.updateRow({
         databaseId: import.meta.env.VITE_APPWRITE_PROJECT_DATABASE_ID,
         tableId: "courses",
         rowId: id,
         data: {
-          ...(status && {status}),
-          ...(approveStatus && {approveStatus})
+          ...(status && { status }),
+          ...(approveStatus && { approveStatus }),
         },
       });
       const updateStatusResponse = {
@@ -350,6 +391,20 @@ const courseSlice = createSlice({
         state.error =
           (action?.payload?.message as string) || "Soemthing went wrong";
       })
+      .addCase(getSingleCourse.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSingleCourse.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log("action from singlecourse");
+        state.singleIdCourse = action.payload;
+      })
+      .addCase(getSingleCourse.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          (action?.payload?.message as string) || "something went wrong";
+      })
       .addCase(createCourse.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -375,7 +430,6 @@ const courseSlice = createSlice({
           findObj.price = action.payload.price;
           findObj.title = action.payload.title;
           findObj.categoryName = action.payload.categoryName;
-
         }
       })
       .addCase(updatecourse.rejected, (state, action) => {

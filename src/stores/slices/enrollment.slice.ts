@@ -19,7 +19,7 @@ export const enrollCourse = createAsyncThunk<
   try {
     //check login or not login
     if (!userId) {
-      toast.success("Please Lgin first to continue enrollment process");
+      toast.error("Please Lgin first to continue enrollment process");
       return rejectWithValue({
         success: false,
         message: "Failed to enroll",
@@ -38,10 +38,10 @@ export const enrollCourse = createAsyncThunk<
 
     if (existingUser.rows.length > 0) {
       toast.success("You already enroll for this course");
-      return {
-        courseId,
-        userId,
-      };
+      return rejectWithValue({
+        success: false,
+        message: "You already enrolled",
+      });
     }
 
     //create enrollment

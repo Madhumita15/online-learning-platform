@@ -6,6 +6,7 @@ import blogReducer from '../stores/slices/blog.slice'
 import instructorReducer from '../stores/slices/instructor.slice'
 import userReducer from '../stores/slices/user.slice'
 import enrollmentReducer from '../stores/slices/enrollment.slice'
+import wishlistReducer from '../stores/slices/wishlist.slice'
 
 export const store = configureStore({
     reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
         blog: blogReducer,
         instructor: instructorReducer,
         user: userReducer,
-        enrollment: enrollmentReducer
+        enrollment: enrollmentReducer,
+        wishlist: wishlistReducer
     }
 })

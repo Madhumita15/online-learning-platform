@@ -78,7 +78,7 @@ export const loginUser = createAsyncThunk<
       tableId: "register",
       queries: [Query.equal("email", [data.email])],
     });
-    console.log("existing user", existingUser);
+    // console.log("existing user", existingUser);
 
     if (existingUser.total === 0) {
       toast.success("user not found in db");
