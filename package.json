@@ -16,6 +16,7 @@
     "@mui/icons-material": "^7.3.8",
     "@mui/material": "^7.3.8",
     "@reduxjs/toolkit": "^2.11.2",
+    "@stripe/stripe-js": "^9.1.0",
     "appwrite": "^23.0.0",
     "js-cookie": "^3.0.5",
     "lottie-react": "^2.4.1",
@@ -26,6 +27,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.13.1",
     "sonner": "^2.0.7",
+    "stripe": "^22.0.1",
     "swiper": "^12.1.2",
     "yup": "^1.7.1"
   },
