@@ -25,6 +25,7 @@ const initialState: CourseInitialState = {
   isEdit: null,
   open: false,
   singleIdCourse: null,
+  myCourse: []
 };
 
 export const getAllCourse = createAsyncThunk<
@@ -124,39 +125,80 @@ export const getMyCourse = createAsyncThunk<
 });
 
 export const getSingleCourse = createAsyncThunk<
-getSingleCourseType,
-{rowId: string },
+  getSingleCourseType,
+  { rowId: string },
+  { rejectValue: ErrorResponse }
+>("course/getSingle", async ({ rowId }, { rejectWithValue }) => {
+  try {
+    const response = await tablesDB.getRow({
+      databaseId: import.meta.env.VITE_APPWRITE_PROJECT_DATABASE_ID,
+      tableId: "courses",
+      rowId: rowId,
+    });
+
+    return {
+      $id: response.$id,
+      title: response.title,
+      description: response.description,
+      categoryId: response.categoryId,
+      instructorId: response.instructorId,
+      instructorName: response.instructorName,
+      price: Number(response.price),
+      image: response.image,
+      rating: Number(response.rating),
+      status: response.status,
+      language: response.language,
+      duration: Number(response.duration),
+      categoryName: response.categoryName,
+      approveStatus: response.approveStatus,
+    };
+  } catch {
+    return rejectWithValue({
+      success: false,
+      message: "Failed to fetch course",
+    });
+  }
+});
+
+export const getCoursesByIds = createAsyncThunk<
+CourseListResponseType,
+{courseIds: string[]},
 {rejectValue: ErrorResponse}
+
 >(
-  "course/getSingle",
-  async ({rowId}, { rejectWithValue }) => {
+  "courses/getByIds",
+  async ({courseIds}, { rejectWithValue }) => {
     try {
-      const response = await tablesDB.getRow({
+      const response = await tablesDB.listRows({
         databaseId: import.meta.env.VITE_APPWRITE_PROJECT_DATABASE_ID,
         tableId: "courses",
-        rowId: rowId,
+        queries: [Query.equal("$id", courseIds)],
       });
 
-      return {
-        $id: response.$id,
-        title: response.title,
-        description: response.description,
-        categoryId: response.categoryId,
-        instructorId: response.instructorId,
-        instructorName: response.instructorName,
-        price: Number(response.price),
-        image: response.image,
-        rating: Number(response.rating),
-        status: response.status,
-        language: response.language,
-        duration: Number(response.duration),
-        categoryName: response.categoryName,
-        approveStatus: response.approveStatus,
-      };
+       const mappedCourses = response.rows.map((row) => ({
+      $id: row.$id,
+      title: row.title,
+      description: row.description,
+      categoryId: row.categoryId,
+      instructorId: row.instructorId,
+      instructorName: row.instructorName,
+      price: Number(row.price),
+      image: row.image,
+      rating: Number(row.rating),
+      status: row.status,
+      language: row.language,
+      duration: Number(row.duration),
+      categoryName: row.categoryName,
+      approveStatus: row.approveStatus,
+    }));
+    return {
+      courses: mappedCourses,
+      total: response.total,
+    };
     } catch {
       return rejectWithValue({
         success: false,
-        message: "Failed to fetch course",
+        message: "Failed to fetch courses",
       });
     }
   },
@@ -227,7 +269,7 @@ export const createCourse = createAsyncThunk<
       rating: Number(response.rating),
       approveStatus: response.approveStatus,
     };
-    console.log(response);
+    // console.log(response);
     return mappedCreateCourse;
   } catch {
     return rejectWithValue({
@@ -360,6 +402,10 @@ const courseSlice = createSlice({
     setClose: (state) => {
       state.open = false;
     },
+    resetMyCourse: (state)=> {
+      state.myCourse = []
+    }
+    
   },
   extraReducers: (builder) => {
     builder
@@ -459,7 +505,22 @@ const courseSlice = createSlice({
         // console.log("action inside rejected", action.payload.message);
         state.error =
           (action?.payload?.message as string) || "something went wrong";
-      });
+      })
+      .addCase(getCoursesByIds.pending, (state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCoursesByIds.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.myCourse = action.payload.courses;
+      })
+      .addCase(getCoursesByIds.rejected, (state, action)=>{
+        state.loading = false;
+        state.error =
+          (action?.payload?.message as string) || "something went wrong";
+
+      })
   },
 });
 
@@ -470,5 +531,6 @@ export const {
   setError,
   setOpen,
   setClose,
+  resetMyCourse
 } = courseSlice.actions;
 export default courseSlice.reducer;

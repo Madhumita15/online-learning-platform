@@ -3,7 +3,7 @@ import { Client, Account, TablesDB, Storage } from "appwrite";
 export const client = new Client();
 
 client
-    .setEndpoint(import.meta.env.VITE_APPWRITE_PROJECT_ENDPOINT) // Your Appwrite Endpoint
+    .setEndpoint(import.meta.env.VITE_APPWRITE_PROJECT_ENDPOINT) 
     .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID)
 ;
 

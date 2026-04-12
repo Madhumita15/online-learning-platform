@@ -4,12 +4,51 @@ import { Permission, Query, Role } from "appwrite";
 import { toast } from "sonner";
 import type { ErrorResponse } from "../../typescript/type/auth.type";
 import type { EnrollmentInitialState } from "../../typescript/interface/enrollment.interface";
+import type { enrollResponseType } from "../../typescript/type/enrollment.type";
+
+
 
 const initialState: EnrollmentInitialState = {
   loading: false,
   error: null,
   isEnrolledMap: {},
+  allEnrollCourse: [],
 };
+
+export const getAllenrollCourse = createAsyncThunk<
+{rows: enrollResponseType[], total: number},
+{userId: string},
+{rejectValue: ErrorResponse}
+>(
+  "enrol/getcourse",
+  async ({ userId }, { rejectWithValue }) => {
+    try {
+      const response = await tablesDB.listRows({
+        databaseId: import.meta.env.VITE_APPWRITE_PROJECT_DATABASE_ID,
+        tableId: "enrollment",
+        queries: [Query.equal("userId", userId)]
+      });
+
+      const mappedCourses = response.rows?.map((course)=> ({
+        courseId: course.courseId,
+        userId: course.userId,
+        paymentSuccess: course.paymentSuccess
+
+      }
+        
+      ))
+      return {
+        rows: mappedCourses,
+        total: response.total
+      }
+    } catch {
+      return rejectWithValue({
+        success: false,
+        message: "Failed to getenroll",
+      });
+    }
+  },
+);
 
 export const enrollCourse = createAsyncThunk<
   { courseId: string; userId: string },
@@ -108,7 +147,14 @@ export const checkEnrollment = createAsyncThunk<
 const enrollmentSlice = createSlice({
   name: "enroll",
   initialState,
-  reducers: {},
+  reducers: {
+    resetEnrollment: (state)=>{
+      state.allEnrollCourse = []
+      state.error = null
+      state.isEnrolledMap = {}
+      state.loading = false
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(enrollCourse.pending, (state) => {
@@ -134,8 +180,13 @@ const enrollmentSlice = createSlice({
           const { courseId, isEnrolled } = action.payload;
           state.isEnrolledMap[courseId] = isEnrolled;
         }
-      });
+      })
+      .addCase(getAllenrollCourse.fulfilled, (state, action)=>{
+        // console.log("action from enrollment process", action.payload)
+        state.allEnrollCourse = action.payload.rows
+      })
   },
 });
 
+export const {resetEnrollment} = enrollmentSlice.actions
 export default enrollmentSlice.reducer;

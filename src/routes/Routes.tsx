@@ -20,6 +20,8 @@ import InstructorCourse from "../pages/instructor/InstructorCourse";
 import UserInstructor from "../pages/user/UserInstructor";
 import SingleCourse from "../pages/user/SingleCourse";
 import InstructorRequest from "../pages/admin/InstructorRequest";
+import Mycourse from "../pages/user/Mycourse";
+
 
 
 const routes = createBrowserRouter([
@@ -62,7 +64,12 @@ const routes = createBrowserRouter([
       {
         path: "/singleCourse/:id",
         element: <SingleCourse />
-      }
+      },
+      {
+        path: "/mycourse",
+        element: <Mycourse />
+      },
+       
       
     ],
   },

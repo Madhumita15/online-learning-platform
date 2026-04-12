@@ -6,8 +6,6 @@ import type { wishListInterface } from "../../typescript/interface/wishlist.inte
 import type { getWishlistType } from "../../typescript/type/wishlist.type";
 
 
-
-
 const initialState: wishListInterface = {
   allWishList: [],
   isWishlistedMap: {},
@@ -125,7 +123,7 @@ const wishSlice = createSlice({
         );
       })
       .addCase(getWishlist.fulfilled, (state, action) => {
-        console.log("get all wishlist",action.payload)
+        // console.log("get all wishlist",action.payload)
         const map: Record<string, boolean> = {};
 
         action.payload.rows.forEach((item) => {

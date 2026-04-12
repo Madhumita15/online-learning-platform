@@ -26,6 +26,7 @@ export interface CourseInitialState {
   isEdit: string | null;
   open: boolean,
   singleIdCourse: CourseType | null
+  myCourse: CourseType[]
 
 }
 

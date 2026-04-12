@@ -140,6 +140,10 @@ const Sidebar = () => {
             </ListItem>
           </List>
         </nav>
+        <div className="absolute bottom-24 items-center justify-center flex flex-col bg-transparent  w-[290px]  ">
+          <h1 >Email: {user.email}</h1>
+          <h1>Name: {user.name}</h1>
+        </div>
         <Button
           variant="outlined"
           onClick={handleLogout}

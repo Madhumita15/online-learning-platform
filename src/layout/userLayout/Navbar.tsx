@@ -1,4 +1,10 @@
-import { Search, ShoppingCart, Menu, X } from "lucide-react";
+import {
+  Search,
+  Menu,
+  X,
+  CircleUser,
+  LogOut,
+} from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Container } from "@mui/material";
@@ -9,6 +15,8 @@ import type { FormConfig } from "../../typescript/interface/form.interface";
 import { useAppDispatch, useAppSeletor } from "../../services/helper/redux";
 import { logoutUser } from "../../stores/slices/auth.slice";
 import { toast } from "sonner";
+import { resetEnrollment } from "../../stores/slices/enrollment.slice";
+import { resetMyCourse } from "../../stores/slices/course.slice";
 
 
 const Navbar = () => {
@@ -20,7 +28,7 @@ const Navbar = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [opentoggle, setOpenToggle] = useState(false);
 
   const handleSearch = () => {
     if (!query.trim()) return;
@@ -39,16 +47,15 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
-  
 
   const handleLogout = async () => {
     try {
-      
-    await dispatch(logoutUser()).unwrap()
-
-    } catch  {
-      toast.error("Failed to Logout")
-
+      await dispatch(logoutUser()).unwrap();
+      setOpenToggle(false)
+      dispatch(resetEnrollment())
+      dispatch(resetMyCourse())
+    } catch {
+      toast.error("Failed to Logout");
     }
   };
   return (
@@ -78,7 +85,7 @@ const Navbar = () => {
               <div className="hidden md:flex items-center bg-slate-100 hover:bg-slate-200 rounded-full px-4 py-2 transition border-2 border-purple-200 duration-300 shadow-sm">
                 <input
                   type="text"
-                  onChange={(e)=> setQuery(e.target.value)}
+                  onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   placeholder="Search courses..."
                   className="bg-transparent text-slate-800 placeholder-slate-500  focus:outline-none text-sm w-40 lg:w-56"
@@ -87,20 +94,58 @@ const Navbar = () => {
               </div>
 
               {/* Right actions - Desktop */}
-              <div className="hidden lg:flex flex-row items-center gap-2">
+              <div className="hidden lg:flex flex-row items-center gap-1">
                 <NavLink to="/becomeinstructor">
                   <button className="px-4 py-2 text-slate-700 font-bold hover:text-blue-600 transition duration-300 text-sm">
                     Become instructor
                   </button>
                 </NavLink>
-                <NavLink to="/cart">
-                  <button className="relative p-2 rounded-lg hover:bg-slate-100 transition duration-300">
-                    <ShoppingCart className="w-6 h-6 text-slate-700 hover:text-blue-600" />
-                  </button>
-                </NavLink>
-                <div className="border-l border-slate-300 pl-2 ml-2 flex gap-2">
+
+                <div className="border-l border-slate-300 pl-2 ml-2 flex gap-2 ">
                   {user && user.userId ? (
-                    <button type="button" onClick={handleLogout}>Logout</button>
+                    <div className="relative">
+                      <CircleUser
+                        onClick={() => setOpenToggle(!opentoggle)}
+                        className="cursor-pointer text-purple-900 size-7 hover:text-purple-700 transition duration-200"
+                      />
+
+                      {opentoggle && (
+                        <div className="absolute top-8 right-0  w-[200px] bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg shadow-lg shadow-purple-200/50 border border-purple-200 p-3 flex flex-col gap-2 z-50 backdrop-blur-sm">
+                          {/* My Courses Link */}
+                          <NavLink
+                            to="/mycourse"
+                            className="text-sm font-semibold text-purple-700 hover:text-purple-900 hover:bg-purple-100 px-2 py-1.5 rounded transition duration-200"
+                          >
+                            My Courses
+                          </NavLink>
+
+                          {/* Divider */}
+                          <div className="h-px bg-gradient-to-r from-purple-200 to-blue-200 my-1"></div>
+
+                          {/* Email */}
+                          <p className="text-base text-slate-600 px-2 truncate font-medium">
+                            {user.email}
+                          </p>
+
+                          {/* Name */}
+                          <p className="text-base text-slate-700 px-2 font-semibold truncate">
+                            {user.name}
+                          </p>
+
+                          {/* Divider */}
+                          <div className="h-px bg-gradient-to-r from-purple-200 to-pink-200 my-1"></div>
+
+                          {/* Logout Button */}
+                          <button
+                            onClick={handleLogout}
+                            className="flex items-center justify-start gap-2 text-sm font-bold text-pink-600 hover:text-pink-700 hover:bg-pink-100 px-2 py-1.5 rounded transition duration-200 cursor-pointer"
+                          >
+                            <LogOut size={14} />
+                            Logout
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <>
                       <button
@@ -200,72 +245,86 @@ const Navbar = () => {
                   Become instructor
                 </button>
               </NavLink>
-              <NavLink to="/cart">
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full flex items-center gap-2 px-4 py-2 text-slate-700  font-bold hover:text-blue-600 hover:bg-blue-100 rounded-lg transition duration-300 text-sm"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  Cart
-                </button>
-              </NavLink>
+              
 
-               {user && user.userId ? (
-                    <button onClick={handleLogout}>Logout</button>
-                  ) : (
-                    <>
-                      <button
-                        className="px-4 py-2 text-slate-700  font-bold hover:text-blue-600 transition duration-300 text-sm"
-                        onClick={() => {
-                          setOpen(true);
-                          setConfig(loginConfig);
-                        }}
+              {user && user.userId ? (
+                <div className="relative flex justify-center items-center">
+                  <CircleUser
+                    onClick={() => setOpenToggle(!opentoggle)}
+                    className="cursor-pointer text-purple-900 size-7 hover:text-purple-700 transition duration-200 "
+                  />
+
+                  {opentoggle && (
+                    <div className="absolute top-8 right-0  w-[200px] bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg shadow-lg shadow-purple-200/50 border border-purple-200 p-3 flex flex-col gap-2 z-50 backdrop-blur-sm">
+                      {/* My Courses Link */}
+                      <NavLink
+                        to="/mycourse"
+                        className="text-sm font-semibold text-purple-700 hover:text-purple-900 hover:bg-purple-100 px-2 py-1.5 rounded transition duration-200"
                       >
-                        Login
-                      </button>
+                        My Courses
+                      </NavLink>
 
+                      {/* Divider */}
+                      <div className="h-px bg-gradient-to-r from-purple-200 to-blue-200 my-1"></div>
+
+                      {/* Email */}
+                      <p className="text-base text-slate-600 px-2 truncate font-medium">
+                        {user.email}
+                      </p>
+
+                      {/* Name */}
+                      <p className="text-base text-slate-700 px-2 font-semibold truncate">
+                        {user.name}
+                      </p>
+
+                      {/* Divider */}
+                      <div className="h-px bg-gradient-to-r from-purple-200 to-pink-200 my-1"></div>
+
+                      {/* Logout Button */}
                       <button
-                        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg  font-bold hover:shadow-lg hover:shadow-blue-500/50 transition duration-300 text-sm"
-                        onClick={() => {
-                          setOpen(true);
-                          setConfig(signupConfig);
-                        }}
+                        onClick={handleLogout}
+                        className="flex items-center justify-start gap-2 text-sm font-bold text-pink-600 hover:text-pink-700 hover:bg-pink-100 px-2 py-1.5 rounded transition duration-200 cursor-pointer"
                       >
-                        Sign up
+                        <LogOut size={14} />
+                        Logout
                       </button>
-
-                      {config && (
-                        <FormDialog
-                          open={open}
-                          setOpen={setOpen}
-                          config={config}
-                          setConfig={setConfig}
-                        />
-                      )}
-                    </>
+                    </div>
                   )}
+                </div>
+              ) : (
+                <>
+                  <button
+                    className="px-4 py-2 text-slate-700  font-bold hover:text-blue-600 transition duration-300 text-sm"
+                    onClick={() => {
+                      setOpen(true);
+                      setConfig(loginConfig);
+                    }}
+                  >
+                    Login
+                  </button>
 
-              {/* <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setOpen(true);
-                  setConfig(loginConfig);
-                }}
-                className="w-full px-4 py-2 text-slate-700  font-bold hover:text-blue-600 hover:bg-blue-100 rounded-lg transition duration-300 text-sm"
-              >
-                Login
-              </button>
+                  <button
+                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg  font-bold hover:shadow-lg hover:shadow-blue-500/50 transition duration-300 text-sm"
+                    onClick={() => {
+                      setOpen(true);
+                      setConfig(signupConfig);
+                    }}
+                  >
+                    Sign up
+                  </button>
 
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setOpen(true);
-                  setConfig(signupConfig);
-                }}
-                className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg  font-bold hover:shadow-lg hover:shadow-blue-500/50 transition duration-300 text-sm"
-              >
-                Sign up
-              </button> */}
+                  {config && (
+                    <FormDialog
+                      open={open}
+                      setOpen={setOpen}
+                      config={config}
+                      setConfig={setConfig}
+                    />
+                  )}
+                </>
+              )}
+
+             
             </div>
           </div>
         )}
