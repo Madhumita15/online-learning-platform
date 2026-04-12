@@ -26,7 +26,6 @@ export const enrollCourse = createAsyncThunk<
       });
     }
 
-    //check duplicate enrollment
     const existingUser = await tablesDB.listRows({
       databaseId: import.meta.env.VITE_APPWRITE_PROJECT_DATABASE_ID,
       tableId: "enrollment",

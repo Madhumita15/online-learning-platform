@@ -21,6 +21,7 @@ import UserInstructor from "../pages/user/UserInstructor";
 import SingleCourse from "../pages/user/SingleCourse";
 import InstructorRequest from "../pages/admin/InstructorRequest";
 
+
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -62,6 +63,7 @@ const routes = createBrowserRouter([
         path: "/singleCourse/:id",
         element: <SingleCourse />
       }
+      
     ],
   },
   {

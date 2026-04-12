@@ -166,7 +166,7 @@ const SingleCourse = () => {
                       toast.error("Please Login first");
                       return;
                     }
-                    if(!singleIdCourse.$id) return
+                    if (!singleIdCourse.$id) return;
 
                     toggleWishlist(user.userId, singleIdCourse.$id);
                   }}
