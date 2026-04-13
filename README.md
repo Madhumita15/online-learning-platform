@@ -1,73 +1,250 @@
-# React + TypeScript + Vite
+# 📚 EduStack - Online Learning Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Project Overview
 
-Currently, two official plugins are available:
+EduStack is a modern online learning platform built using React and Appwrite.  
+It allows users to explore courses, enroll in them, and manage their learning journey with a smooth and responsive user experience.
+The platform includes authentication, course management, and role-based access (admin, instructor, student), making it a scalable and real-world ready application.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🎯 Project Objective
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The main goal of EduStack is to:
+- Provide a seamless online learning experience
+- Implement secure authentication and user management
+- Practice real-world full-stack development using Appwrite
+- Avoid prop drilling using global state management
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Frontend:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- ⚛️ React.js
+- 🟦 TypeScript
+- 🎨 Tailwind CSS
+- 🧩 Material UI
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### State Management:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- 🔄 Redux
+- ⚡ Redux Toolkit
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Backend (BaaS):
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- 🔥 Appwrite
+  - Authentication
+  - Database
+  - Storage
+
+---
+
+## ✨ Features
+
+- 🔐 User Authentication (Login / Register)
+- 👨‍🎓 Role-based access (Admin / Instructor / Student)
+
+### 📚 Course Features
+- 📖 Browse and explore courses
+- 🛒 Enroll in courses
+- 🧑‍🏫 Instructor course management (create, update, delete)
+- 📊 Admin course monitoring
+
+### 📝 Blog Features
+- ✍️ Create and manage blogs
+- 🧑‍🏫 Instructor blog management (only their own content)
+- 🛠️ Admin blog control and moderation
+
+### ❤️ Wishlist
+- 💖 Add/remove courses to wishlist
+- 📌 Save courses for later
+
+### 👥 User Management
+- 🛠️ Admin can manage all users
+- ✅ Approve or reject instructor requests
+- 🔄 Role handling and access control
+
+### 📦 Storage & Backend
+- 📁 File upload using Appwrite Storage
+- 🔥 Backend powered by Appwrite (Auth, DB, Storage)
+
+### ⚡ Performance & State
+- 🔄 Global state management using Redux Toolkit
+- 🚫 Avoid prop drilling
+- ⚡ Optimized rendering
+
+### 🎨 UI/UX
+- 🎨 Responsive design with Tailwind CSS
+- 🧩 Component-based UI with Material UI
+
+
+## 📂 Folder Structure
+
+``` bash
+
+├── 📁 public/
+│   └── 🖼️ vite.svg
+├── 📁 src/
+│   ├── 📁 assets/
+│   │   ├── 🖼️ Frame 431.png
+│   │   ├── 🖼️ Frame 432.png
+│   │   ├── 🖼️ Frame 433.png
+│   │   ├── 🖼️ Frame 434.png
+│   │   ├── 🖼️ Frame 449 (1).png
+│   │   ├── 🖼️ Frame 449.png
+│   │   ├── 🖼️ Frame 501 (1).png
+│   │   ├── 🖼️ Frame 539.png
+│   │   ├── 🖼️ Frame 543 (1).png
+│   │   ├── 🖼️ Frame 543 (10).png
+│   │   ├── 🖼️ Frame 543 (11).png
+│   │   ├── 🖼️ Frame 543 (2).png
+│   │   ├── 🖼️ Frame 543 (3).png
+│   │   ├── 🖼️ Frame 543 (4).png
+│   │   ├── 🖼️ Frame 543 (5).png
+│   │   ├── 🖼️ Frame 543 (6).png
+│   │   ├── 🖼️ Frame 543 (7).png
+│   │   ├── 🖼️ Frame 543 (8).png
+│   │   ├── 🖼️ Frame 543 (9).png
+│   │   ├── 🖼️ Frame 543.png
+│   │   ├── 🖼️ Frame 6 (1).png
+│   │   ├── 🖼️ Frame 6 (2).png
+│   │   ├── 🖼️ Frame 6 (3).png
+│   │   ├── 🖼️ Frame 6 (4).png
+│   │   ├── 🖼️ Frame 6 (5).png
+│   │   ├── 🖼️ Frame 6.png
+│   │   ├── 🖼️ Instructor.png
+│   │   ├── 🖼️ image (1) 1.png
+│   │   ├── 🖼️ image 1.png
+│   │   └── 🖼️ react.svg
+│   ├── 📁 components/
+│   │   ├── 📁 blog/
+│   │   │   ├── 📄 BlogDialogForm.tsx
+│   │   │   ├── 📄 BlogPagination.tsx
+│   │   │   └── 📄 BlogTable.tsx
+│   │   ├── 📁 course/
+│   │   │   ├── 📄 CourseDialogForm.tsx
+│   │   │   ├── 📄 CoursePagination.tsx
+│   │   │   └── 📄 CourseTableData.tsx
+│   │   ├── 📄 DynamicInput.tsx
+│   │   ├── 📄 FormDialog.tsx
+│   │   ├── 📄 ProtectedRoutes.tsx
+│   │   ├── 📄 ScrollToTop.tsx
+│   │   └── 📄 Slider.tsx
+│   ├── 📁 layout/
+│   │   ├── 📁 adminLayout/
+│   │   │   ├── 📄 AdminWrapper.tsx
+│   │   │   ├── 📄 Navbar.tsx
+│   │   │   └── 📄 Sidebar.tsx
+│   │   └── 📁 userLayout/
+│   │       ├── 📄 Footer.tsx
+│   │       ├── 📄 Navbar.tsx
+│   │       └── 📄 UserWrapper.tsx
+│   ├── 📁 lib/
+│   │   └── 📄 appwrite.config.ts
+│   ├── 📁 pages/
+│   │   ├── 📁 admin/
+│   │   │   ├── 📄 AdminBlog.tsx
+│   │   │   ├── 📄 AdminCategory.tsx
+│   │   │   ├── 📄 AdminCourses.tsx
+│   │   │   ├── 📄 AdminUser.tsx
+│   │   │   ├── 📄 Dashboard.tsx
+│   │   │   └── 📄 InstructorRequest.tsx
+│   │   ├── 📁 instructor/
+│   │   │   ├── 📄 InstructorBlog.tsx
+│   │   │   ├── 📄 InstructorCourse.tsx
+│   │   │   └── 📄 InstructorDashboard.tsx
+│   │   └── 📁 user/
+│   │       ├── 📄 About.tsx
+│   │       ├── 📄 Blog.tsx
+│   │       ├── 📄 Cart.tsx
+│   │       ├── 📄 Contact.tsx
+│   │       ├── 📄 Courses.tsx
+│   │       ├── 📄 Home.tsx
+│   │       ├── 📄 InstructorForm.tsx
+│   │       ├── 📄 Mycourse.tsx
+│   │       ├── 📄 SingleCourse.tsx
+│   │       └── 📄 UserInstructor.tsx
+│   ├── 📁 routes/
+│   │   └── 📄 Routes.tsx
+│   ├── 📁 services/
+│   │   ├── 📁 config/
+│   │   │   ├── 📄 login.config.ts
+│   │   │   └── 📄 signup.config.ts
+│   │   ├── 📁 helper/
+│   │   │   ├── 📁 provider/
+│   │   │   │   └── 📄 ReduxProvider.tsx
+│   │   │   └── 📄 redux.ts
+│   │   ├── 📁 json/
+│   │   │   ├── 📁 inputsData/
+│   │   │   │   ├── 📄 blog.input.ts
+│   │   │   │   ├── 📄 course.input.ts
+│   │   │   │   ├── 📄 instructor.input.ts
+│   │   │   │   ├── 📄 login.input.ts
+│   │   │   │   └── 📄 signup.input.ts
+│   │   │   └── 📁 lottie/
+│   │   │       ├── ⚙️ Loading animation.json
+│   │   │       └── ⚙️ Not Found.json
+│   │   └── 📁 validation/
+│   │       ├── 📄 blog.validation.ts
+│   │       ├── 📄 category.validation.ts
+│   │       ├── 📄 contact.validation.ts
+│   │       ├── 📄 course.validation.ts
+│   │       ├── 📄 login.validation.ts
+│   │       └── 📄 signup.validation.ts
+│   ├── 📁 stores/
+│   │   ├── 📁 slices/
+│   │   │   ├── 📄 auth.slice.ts
+│   │   │   ├── 📄 blog.slice.ts
+│   │   │   ├── 📄 category.slice.ts
+│   │   │   ├── 📄 course.slice.ts
+│   │   │   ├── 📄 enrollment.slice.ts
+│   │   │   ├── 📄 instructor.slice.ts
+│   │   │   ├── 📄 user.slice.ts
+│   │   │   └── 📄 wishlist.slice.ts
+│   │   └── 📄 store.ts
+│   ├── 📁 types/
+│   │   └── 📄 swiper.d.ts
+│   ├── 📁 typescript/
+│   │   ├── 📁 interface/
+│   │   │   ├── 📄 auth.interface.ts
+│   │   │   ├── 📄 blog.interface.ts
+│   │   │   ├── 📄 category.interface.ts
+│   │   │   ├── 📄 course.interface.ts
+│   │   │   ├── 📄 enrollment.interface.ts
+│   │   │   ├── 📄 form.interface.ts
+│   │   │   ├── 📄 instructor.interface.ts
+│   │   │   └── 📄 wishlist.interface.ts
+│   │   └── 📁 type/
+│   │       ├── 📄 auth.type.ts
+│   │       ├── 📄 blog.type.ts
+│   │       ├── 📄 category.type.ts
+│   │       ├── 📄 contact.type.ts
+│   │       ├── 📄 course.type.ts
+│   │       ├── 📄 enrollment.type.ts
+│   │       ├── 📄 form.type.ts
+│   │       ├── 📄 input.type.ts
+│   │       ├── 📄 instructor.type.ts
+│   │       ├── 📄 redux.type.ts
+│   │       ├── 📄 user.type.ts
+│   │       └── 📄 wishlist.type.ts
+│   ├── 🎨 App.css
+│   ├── 📄 App.tsx
+│   ├── 📄 global.d.ts
+│   ├── 🎨 index.css
+│   └── 📄 main.tsx
+├── ⚙️ .gitignore
+├── 📝 README.md
+├── 📄 eslint.config.js
+├── 🌐 index.html
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+├── 📄 postcss.config.js
+├── 📄 tailwind.config.js
+├── ⚙️ tsconfig.app.json
+├── ⚙️ tsconfig.json
+├── ⚙️ tsconfig.node.json
+├── ⚙️ vercel.json
+└── 📄 vite.config.ts
 ```
